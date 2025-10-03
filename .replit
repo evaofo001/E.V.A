@@ -1,10 +1,11 @@
-modules = ["nodejs-20", "python-3.11"]
+modules = ["nodejs-20", "python-3.11", "rust-stable"]
 [agent]
 expertMode = true
 integrations = ["python_openai:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
+packages = ["clang", "gcc", "protobuf"]
 
 [workflows]
 runButton = "Project"
