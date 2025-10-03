@@ -8,6 +8,8 @@ interface Message {
   timestamp: Date
 }
 
+const API_URL = 'http://localhost:8000'
+
 function App() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -18,9 +20,10 @@ function App() {
     }
   ])
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSend = () => {
-    if (!input.trim()) return
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -31,16 +34,46 @@ function App() {
 
     setMessages([...messages, userMessage])
     setInput('')
+    setIsLoading(true)
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${API_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: input,
+          user_id: 'user_' + Math.random().toString(36).substr(2, 9)
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from EVA')
+      }
+
+      const data = await response.json()
+      
       const evaResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'eva',
-        content: 'I am currently in development mode. My full cognitive systems are being initialized. Please check back soon as I continue to evolve.',
+        content: data.content,
+        timestamp: new Date(data.timestamp)
+      }
+      
+      setMessages(prev => [...prev, evaResponse])
+    } catch (error) {
+      console.error('Error communicating with EVA:', error)
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'eva',
+        content: 'I apologize, but I encountered an error connecting to my core systems. Please ensure the backend is running and try again.',
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, evaResponse])
-    }, 1000)
+      setMessages(prev => [...prev, errorResponse])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -70,12 +103,17 @@ function App() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && !isLoading) {
+                handleSend()
+              }
+            }}
             placeholder="Send a message to EVA..."
             className="message-input"
+            disabled={isLoading}
           />
-          <button onClick={handleSend} className="send-button">
-            Send
+          <button onClick={handleSend} className="send-button" disabled={isLoading}>
+            {isLoading ? 'Processing...' : 'Send'}
           </button>
         </div>
       </div>
@@ -83,7 +121,7 @@ function App() {
       <footer className="eva-footer">
         <div className="status">
           <span className="status-indicator active"></span>
-          <span>System Status: Initializing</span>
+          <span>System Status: Active</span>
         </div>
       </footer>
     </div>
