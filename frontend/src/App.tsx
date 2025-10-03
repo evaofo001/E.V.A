@@ -8,7 +8,9 @@ interface Message {
   timestamp: Date
 }
 
-const API_URL = 'http://localhost:8000'
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000' 
+  : `https://${window.location.hostname.replace('-5000', '-8000')}`
 
 function App() {
   const [messages, setMessages] = useState<Message[]>([

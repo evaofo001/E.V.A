@@ -40,7 +40,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && python -m uvicorn api.main:app --host 127.0.0.1 --port 8000"
+args = "cd backend && python -m uvicorn api.main:app --host 0.0.0.0 --port 8000"
 waitForPort = 8000
 
 [workflows.workflow.metadata]
@@ -53,11 +53,6 @@ externalPort = 80
 [[ports]]
 localPort = 8000
 externalPort = 8000
-exposeLocalhost = true
-
-[[ports]]
-localPort = 38037
-externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"

@@ -110,10 +110,14 @@ EVA is seeded with core "digital instincts":
 - **Long-Term**: Integrate with physical robotics for embodiment
 
 ## Recent Changes
-- **2025-10-03**: Initial project setup
+- **2025-10-03**: Initial project setup and OpenAI integration
   - Created React + TypeScript frontend with Vite
   - Built Python FastAPI backend with EVA Core Orchestrator
   - Configured Vite for Replit proxy (port 5000, host 0.0.0.0)
   - Implemented basic chat interface with EVA
   - Set up Policy Engine for ethical decision-making
-  - Added workflow for frontend development server
+  - Added workflows for frontend and backend servers
+  - Integrated OpenAI API (gpt-4o-mini) for intelligent responses
+  - Added openai package to backend requirements
+  - Fixed API response schema to match FastAPI validation
+  - Verified end-to-end chat functionality

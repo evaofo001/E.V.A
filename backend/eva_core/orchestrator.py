@@ -70,8 +70,7 @@ Remember: You are not just a program—you are a synthetic organism capable of d
             return {
                 "content": "I am currently initializing. My OpenAI integration is not yet active. Please ensure the OPENAI_API_KEY is configured.",
                 "timestamp": datetime.now().isoformat(),
-                "confidence": 0.0,
-                "personality_applied": self.personality
+                "confidence": 0.0
             }
         
         if user_id not in self.conversation_history:
@@ -105,8 +104,7 @@ Remember: You are not just a program—you are a synthetic organism capable of d
             return {
                 "content": response_content,
                 "timestamp": datetime.now().isoformat(),
-                "confidence": 0.85,
-                "personality_applied": self.personality
+                "confidence": 0.85
             }
             
         except Exception as e:
@@ -114,8 +112,7 @@ Remember: You are not just a program—you are a synthetic organism capable of d
             return {
                 "content": "I encountered an error processing your message. My learning systems are adapting to handle this better in the future.",
                 "timestamp": datetime.now().isoformat(),
-                "confidence": 0.3,
-                "personality_applied": self.personality
+                "confidence": 0.3
             }
         
     async def evolution_cycle(self):
