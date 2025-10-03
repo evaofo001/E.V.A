@@ -70,6 +70,19 @@ async def get_ethical_rules():
     return {"rules": policy_engine.get_rules()}
 
 
+@app.get("/learning/insights/{user_id}")
+async def get_learning_insights(user_id: str):
+    return eva_orchestrator.get_learning_insights(user_id)
+
+
+@app.get("/learning/patterns")
+async def get_learned_patterns():
+    if eva_orchestrator.training_pipeline:
+        patterns = eva_orchestrator.training_pipeline.get_learned_patterns()
+        return {"patterns": patterns, "count": len(patterns)}
+    return {"patterns": [], "count": 0}
+
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))

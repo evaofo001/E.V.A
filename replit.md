@@ -101,8 +101,12 @@ EVA is seeded with core "digital instincts":
 - ✅ Ethics and Policy Engine
 - ✅ Real-time messaging
 - ✅ Status monitoring
+- ✅ Multi-language architecture (Rust, C++, Python, TypeScript)
+- ✅ Training/Learning pipeline - EVA learns from conversations
+- ✅ C++ Perception module for performance
+- 🚧 Rust Policy Engine (compiled, integration pending)
 - 🚧 Knowledge graph integration (pending database)
-- 🚧 Learning and adaptation systems (in development)
+- 🚧 Full multi-language integration (in progress)
 
 ## Future Roadmap
 - **Short-Term**: Finalize ethical ruleset and decision tree
@@ -110,14 +114,28 @@ EVA is seeded with core "digital instincts":
 - **Long-Term**: Integrate with physical robotics for embodiment
 
 ## Recent Changes
-- **2025-10-03**: Initial project setup and OpenAI integration
-  - Created React + TypeScript frontend with Vite
-  - Built Python FastAPI backend with EVA Core Orchestrator
-  - Configured Vite for Replit proxy (port 5000, host 0.0.0.0)
-  - Implemented basic chat interface with EVA
-  - Set up Policy Engine for ethical decision-making
-  - Added workflows for frontend and backend servers
-  - Integrated OpenAI API (gpt-4o-mini) for intelligent responses
-  - Added openai package to backend requirements
-  - Fixed API response schema to match FastAPI validation
-  - Verified end-to-end chat functionality
+- **2025-10-03**: Multi-language architecture and learning systems
+  - **Phase 1: Initial Setup**
+    - Created React + TypeScript frontend with Vite
+    - Built Python FastAPI backend with EVA Core Orchestrator
+    - Configured Vite for Replit proxy (port 5000, host 0.0.0.0)
+    - Implemented basic chat interface with EVA
+    - Set up Policy Engine for ethical decision-making
+  
+  - **Phase 2: OpenAI Integration**
+    - Added workflows for frontend and backend servers
+    - Integrated OpenAI API (gpt-4o-mini) for intelligent responses
+    - Added openai package to backend requirements
+    - Fixed API response schema to match FastAPI validation
+    - Fixed network binding for Replit environment (0.0.0.0)
+    - Verified end-to-end chat functionality
+  
+  - **Phase 3: Multi-Language Architecture**
+    - Installed Rust (1.88.0), C++ (GCC 14.2.1), C (Clang 19.1.7) toolchains
+    - Created project structure: rust_modules/, cpp_modules/, proto/
+    - Defined Protobuf schemas for cross-language communication
+    - Built Rust-based Policy Engine with PyO3 bindings
+    - Created C++ Perception module with sentiment analysis
+    - Implemented Python Training Pipeline for continual learning
+    - EVA now learns patterns from conversations autonomously
+    - Added API endpoints for learning insights (/learning/insights, /learning/patterns)

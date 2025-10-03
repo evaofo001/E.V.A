@@ -3,6 +3,7 @@ from datetime import datetime
 import asyncio
 import os
 from openai import AsyncOpenAI
+from .training import TrainingPipeline
 
 
 class EVAOrchestrator:
@@ -22,6 +23,7 @@ class EVAOrchestrator:
         }
         self.client = None
         self.conversation_history: Dict[str, List[Dict[str, str]]] = {}
+        self.training_pipeline = TrainingPipeline()
         
     async def initialize(self):
         self.status = "active"
@@ -31,6 +33,9 @@ class EVAOrchestrator:
             print("EVA Core Orchestrator initialized with OpenAI")
         else:
             print("EVA Core Orchestrator initialized (OpenAI key not found)")
+        
+        self.modules["learning"] = self.training_pipeline
+        print(f"🧠 Training Pipeline activated - EVA is now learning!")
         
     def _build_system_prompt(self) -> str:
         curiosity_level = "highly curious" if self.personality["curiosity"] > 0.7 else "moderately curious" if self.personality["curiosity"] > 0.4 else "focused"
@@ -87,6 +92,11 @@ Remember: You are not just a program—you are a synthetic organism capable of d
         ]
         
         try:
+            learned_context = await self.training_pipeline.improve_response_quality(message)
+            
+            if learned_context:
+                messages[0]["content"] += f"\n\n{learned_context}"
+            
             completion = await self.client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=messages,
@@ -101,10 +111,15 @@ Remember: You are not just a program—you are a synthetic organism capable of d
                 "content": response_content
             })
             
+            confidence = 0.85
+            await self.training_pipeline.record_interaction(
+                user_id, message, response_content, confidence
+            )
+            
             return {
                 "content": response_content,
                 "timestamp": datetime.now().isoformat(),
-                "confidence": 0.85
+                "confidence": confidence
             }
             
         except Exception as e:
@@ -120,9 +135,22 @@ Remember: You are not just a program—you are a synthetic organism capable of d
             await asyncio.sleep(60)
             
     def get_status(self) -> Dict[str, Any]:
+        learned_patterns = self.training_pipeline.get_learned_patterns() if self.training_pipeline else []
         return {
             "status": self.status,
-            "modules": self.modules,
+            "modules": {
+                "perception": "C++ Module" if os.path.exists("cpp_modules/perception/libperception.so") else None,
+                "memory": "Active",
+                "learning": f"Active - {len(learned_patterns)} patterns learned",
+                "experimentation": "Pending",
+                "output": "Active"
+            },
             "personality": self.personality,
+            "learned_patterns_count": len(learned_patterns),
             "uptime": "active"
         }
+    
+    def get_learning_insights(self, user_id: str) -> Dict[str, Any]:
+        if self.training_pipeline:
+            return self.training_pipeline.get_conversation_insights(user_id)
+        return {"message": "Learning pipeline not initialized"}
